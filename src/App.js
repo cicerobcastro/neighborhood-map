@@ -6,9 +6,8 @@ import ListRestaurants from './component/ListRestaurants'
 
 class App extends Component {
 
-
   state = {
-    venues: [],
+    venues: []
   }
 
   componentDidMount() {
@@ -34,7 +33,8 @@ class App extends Component {
     axios.get(endPoint + new URLSearchParams(parameters))
       .then(response => {
         this.setState({
-          venues: response.data.response.groups[0].items
+          venues: response.data.response.groups[0].items,
+          venues2: response.data.response.groups[0].items
         }, this.renderMap())
       })
       .catch(error => {
@@ -88,15 +88,12 @@ class App extends Component {
 
   render() {
     const logo = "Welcome to Brasília"
+
     return (
       <div className="container">
-        {/* <NavBar logo={logo} /> */}
-        <ul>
-          {this.state.venues.map(item => (
-            <li key={item}>{item}</li>
-          ))}
-        </ul>
-        {/* <div id="map"></div> */}
+        <NavBar logo={logo} />
+        <ListRestaurants {...this.state.venues} />
+        <div id="map"></div>
       </div>
     );
   }
