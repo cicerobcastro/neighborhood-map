@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import NavBar from './ui/NavBar';
 import './App.css';
 import axios from 'axios'
-import ListRestaurants from './component/ListRestaurants'
+//import InfoWindow from './component/InfoWindow'
 
 class App extends Component {
 
@@ -10,6 +10,7 @@ class App extends Component {
     venues: []
   }
 
+  //is invoked immediately after a component is mounted
   componentDidMount() {
     this.getVenues()
   }
@@ -26,15 +27,14 @@ class App extends Component {
       client_secret: "TNGEXFGQID4TDR3LC02ON5G4UJFRDUH5NIMUTFYQ5XRWNWQT",
       query: "food",
       near: "Brasília",
-      v: "20190403"
+      v: "20191903",
+      limit: 10
     }
-
 
     axios.get(endPoint + new URLSearchParams(parameters))
       .then(response => {
         this.setState({
-          venues: response.data.response.groups[0].items,
-          venues2: response.data.response.groups[0].items
+          venues: response.data.response.groups[0].items
         }, this.renderMap())
       })
       .catch(error => {
@@ -45,13 +45,13 @@ class App extends Component {
 
   initMap = () => {
 
-    // Create A Map
+    // Create a map
     var map = new window.google.maps.Map(document.getElementById('map'), {
-      center: { lat: -15.783284, lng: -47.8771351 },
-      zoom: 11
+      center: { lat: -15.8111593, lng: -47.9891185 },
+      zoom: 12
     })
 
-    // Create An InfoWindow
+    // Create a InfoWindow
     var infowindow = new window.google.maps.InfoWindow()
 
     // Display Dynamic Markers
@@ -63,7 +63,6 @@ class App extends Component {
       if (content2 === "undefined") {
         content2 = "Address not found"
       }
-
 
       // Create A Marker
       var marker = new window.google.maps.Marker({
@@ -82,17 +81,21 @@ class App extends Component {
         // Open An InfoWindow
         infowindow.open(map, marker)
       })
-
     })
+  }
+
+  toggleResult = (venue) => {
+    this.setState((state) => ({
+      venues: state.venues.map(c => ({ ...c, open: !venue.open && c.name === venue.name }))
+    }));
   }
 
   render() {
     const logo = "Welcome to Brasília"
-
     return (
       <div className="container">
-        <NavBar logo={logo} />
-        <ListRestaurants {...this.state.venues} />
+        <NavBar onSelectRestaurant={this.toggleResult} venues={this.state.venues} logo={logo} />
+        {/* <InfoWindow venues={this.state.venues} /> */}
         <div id="map"></div>
       </div>
     );

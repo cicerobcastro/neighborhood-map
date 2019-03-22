@@ -1,14 +1,16 @@
 import React, { Component } from 'react'
 
-class ListRestaurants extends Component {
-    render() {
-        console.log('Props', this.props)
-        return (
-            <ol className='restaurantsList'>
-           
-            </ol>
-        )
-    }
+function ListRestaurants(props) {
+    console.log('Props', props)
+    return (
+        <ol className='restaurantsList'>
+             {props.venues.map((venue) => (
+                    <li key={venue.venue.id} >
+                        {venue.name}
+                    </li>
+                ))} 
+        </ol>
+    )
 }
 
 export default ListRestaurants
