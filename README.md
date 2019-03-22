@@ -1,19 +1,27 @@
-# neighborhood-map
+# Neighborhood-Map
 # Udacit
 ### Front End Web Developer
 
-Project created using React JS, Foursquare and Google Maps API. <br/>
+This project is a map from Brasília showing some restaurants and your addresses, that information come from Foursquare API.
+The project was created using React, Foursquare and Google Maps API.
 
 ## Dependencies
 *Google Maps API
 *Foursquare API
 
+## Configuring API's
 
-## How to Run
+This Project already configured with my Key from Google API and Foursquase API, if you want use another key you can change this inside the file App.js changing the function "renderMap" and "getVenues" with your key and client_id.    
+
+## How to install and run
     
-* install node and npm
-* clone this repo
-* open terminal and go to the directory of project
-* run npm install
-* run npm start
-* open browser to localhost:3000
+* Install node and npm
+* Clone this repo
+* Open terminal and go to the directory of project
+* Run npm install
+* Run npm start
+
+
+## Access 
+
+To access the application open browser and go to http://localhost:3000
