@@ -10,17 +10,9 @@ class App extends Component {
     venues: []
   }
 
+
   //is invoked immediately after a component is mounted
   componentDidMount() {
-    this.getVenues()
-  }
-
-  renderMap = () => {
-    loadScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyBuAFQat2Xz08ijJHaXc9w15etZrBeVfhs&callback=initMap")
-    window.initMap = this.initMap
-  }
-
-  getVenues = () => {
     const endPoint = "https://api.foursquare.com/v2/venues/explore?"
     const parameters = {
       client_id: "5OP1LMG5HXWVRFA12KBPCMKX54HI05JZBMINB2BCNJTLM1PV",
@@ -42,6 +34,11 @@ class App extends Component {
       })
   }
 
+  renderMap = () => {
+    loadScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyBuAFQat2Xz08ijJHaXc9w15etZrBeVfhs&callback=initMap")
+    window.initMap = this.initMap
+  }
+
 
   initMap = () => {
 
@@ -52,7 +49,7 @@ class App extends Component {
     })
 
     // Create a InfoWindow
-    var infowindow = new window.google.maps.InfoWindow()
+    const infowindow = new window.google.maps.InfoWindow()
 
     // Display Dynamic Markers
     this.state.venues.forEach(myVenue => {
@@ -65,32 +62,56 @@ class App extends Component {
       }
 
       // Create A Marker
+      var image = 'https://maps.google.com/mapfiles/ms/icons/red-dot.png'
       var marker = new window.google.maps.Marker({
         position: { lat: myVenue.venue.location.lat, lng: myVenue.venue.location.lng },
         map: map,
-        title: myVenue.venue.name
+        title: myVenue.venue.name,
+        icon: image
       })
 
-
       // Click on A Marker!
-      marker.addListener('click', function () {
+      marker.addListener('click', function (event) {
+
+        //marker.setIcon(event.icon = 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png')
 
         // Change the content
         infowindow.setContent(content1 + '<br>' + content2)
 
         // Open An InfoWindow
-        infowindow.open(map, marker)
+        //infowindow.open(map, marker)
+
+        function isInfoWindowOpen(infoWindow) {
+          var map = infoWindow.getMap();
+          return (map !== null && typeof map !== "undefined");
+        }
+
+        if (isInfoWindowOpen(infowindow)) {
+          // do something if it is open
+          infowindow.close(map,marker)
+          marker.clicked(event.icon = 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png')       
+        } else {
+          marker.setIcon(event.icon = 'https://maps.google.com/mapfiles/ms/icons/red-dot.png') 
+          infowindow.open(map, marker)
+        }
+
       })
     })
   }
 
-  toggleResult = (venue) => {
-    this.setState((state) => ({
-      venues: state.venues.map(c => ({ ...c, open: !venue.open && c.name === venue.name }))
+  toggleResult = (myVenue) => {
+    // debugger
+    // var open = new windows.google.maps.Marker({
+
+    // })
+    this.setState((currentVenue) => ({
+      venues: currentVenue.myVenue.map(c =>
+        ({ ...c, open: !myVenue.open && c.name === myVenue.name }))
     }));
   }
 
   render() {
+
     const logo = "Welcome to Brasília"
     return (
       <div className="container">

@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types'
 import escapeRegExp from 'escape-string-regexp'
 import sortBy from 'sort-by';
@@ -14,7 +14,7 @@ class NavBar extends Component {
     }
 
     updateQuery = (query) => {
-        this.setState({ query:query.trim()} )
+        this.setState({ query: query.trim() })
     }
 
     render() {
@@ -22,7 +22,7 @@ class NavBar extends Component {
         if (this.state.query) {
             const match = new RegExp(escapeRegExp(this.state.query), 'i')
             showingVenues = this.props.venues.filter((venue) => match.test(venue.venue.name))
-        }else {
+        } else {
             showingVenues = this.props.venues
         }
 
@@ -44,14 +44,17 @@ class NavBar extends Component {
                                 <div className="dropdown-menu" aria-labelledby="navbarDropdown">
                                     {showingVenues.map((venue) => (
                                         <li key={venue.venue.id}>
-                                            <a onClick={() => this.props.onSelectRestaurant(venue)} className="dropdown-item">{venue.venue.name}</a>
+                                            <a
+                                                className={venue.venue.open ? "result-item opened" : "result-item"}
+                                                onClick={() => this.props.onSelectRestaurant(venue.venue)}
+                                                className="dropdown-item">{venue.venue.name}</a>
                                         </li>
                                     ))}
                                 </div>
                             </ul>
                         </ol>
                         <form className="form-inline my-2 my-lg-0">
-                            <input className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" value={this.state.query} onChange={(event) => this.updateQuery(event.target.value)}/>
+                            <input className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" value={this.state.query} onChange={(event) => this.updateQuery(event.target.value)} />
                             <button className="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
                         </form>
                     </div>
