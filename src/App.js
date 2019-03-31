@@ -1,18 +1,28 @@
 import React, { Component } from 'react';
-import NavBar from './ui/NavBar';
+import NavBar from './component/NavBar';
 import './App.css';
 import axios from 'axios'
-//import InfoWindow from './component/InfoWindow'
+import escapeRegExp from 'escape-string-regexp';
+import ListRestaurants from './component/ListRestaurants'
 
 class App extends Component {
 
-  state = {
-    venues: []
+  constructor(props) {
+    super(props)
+    this.state = {
+      venues: [],
+      markers: [],
+      inVisibleMarkers: [],
+      showVenues: []
+    }
   }
-
 
   //is invoked immediately after a component is mounted
   componentDidMount() {
+    this.getVenues()
+  }
+
+  getVenues() {
     const endPoint = "https://api.foursquare.com/v2/venues/explore?"
     const parameters = {
       client_id: "5OP1LMG5HXWVRFA12KBPCMKX54HI05JZBMINB2BCNJTLM1PV",
@@ -26,7 +36,8 @@ class App extends Component {
     axios.get(endPoint + new URLSearchParams(parameters))
       .then(response => {
         this.setState({
-          venues: response.data.response.groups[0].items
+          venues: response.data.response.groups[0].items,
+          showVenues: response.data.response.groups[0].items
         }, this.renderMap())
       })
       .catch(error => {
@@ -38,7 +49,6 @@ class App extends Component {
     loadScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyBuAFQat2Xz08ijJHaXc9w15etZrBeVfhs&callback=initMap")
     window.initMap = this.initMap
   }
-
 
   initMap = () => {
 
@@ -54,11 +64,10 @@ class App extends Component {
     // Display Dynamic Markers
     this.state.venues.forEach(myVenue => {
 
-      var content1 = `${myVenue.venue.name}`
-      var content2 = `${myVenue.venue.location.address}`
+      const contentString = `<b>${myVenue.venue.name}</b> <br><i>${myVenue.venue.location.address}</i>`
 
-      if (content2 === "undefined") {
-        content2 = "Address not found"
+      if (myVenue.venue.location.address === "undefined") {
+        return "Address not found"
       }
 
       // Create A Marker
@@ -70,54 +79,73 @@ class App extends Component {
         icon: image
       })
 
+      this.state.markers.push(marker)
+
+      function openMarker() {
+
+        // Setting the content
+        infowindow.setContent(contentString)
+
+        // Open an InfoWindow
+        infowindow.open(map, marker)
+      }
+
       // Click on A Marker!
       marker.addListener('click', function (event) {
-
-        //marker.setIcon(event.icon = 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png')
-
-        // Change the content
-        infowindow.setContent(content1 + '<br>' + content2)
-
-        // Open An InfoWindow
-        //infowindow.open(map, marker)
-
-        function isInfoWindowOpen(infoWindow) {
-          var map = infoWindow.getMap();
-          return (map !== null && typeof map !== "undefined");
-        }
-
-        if (isInfoWindowOpen(infowindow)) {
-          // do something if it is open
-          infowindow.close(map,marker)
-          marker.clicked(event.icon = 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png')       
-        } else {
-          marker.setIcon(event.icon = 'https://maps.google.com/mapfiles/ms/icons/red-dot.png') 
-          infowindow.open(map, marker)
-        }
-
+        openMarker()
       })
     })
   }
 
-  toggleResult = (myVenue) => {
-    // debugger
-    // var open = new windows.google.maps.Marker({
+  /*
+   used to search restaurants
+  */
+  Query = query => {
+    this.setState({ query })
+    this.state.markers.map(marker => marker.setVisible(true))
+    let filteredVenues
+    let hiddenMarkers
 
-    // })
-    this.setState((currentVenue) => ({
-      venues: currentVenue.myVenue.map(c =>
-        ({ ...c, open: !myVenue.open && c.name === myVenue.name }))
-    }));
+    if (query) {
+      const match = new RegExp(escapeRegExp(query), "i")
+      filteredVenues = this.state.venues.filter(myVenue =>
+        match.test(myVenue.venue.name)
+      )
+      this.setState({ venues: filteredVenues })
+      hiddenMarkers = this.state.markers.filter(marker =>
+        filteredVenues.every(myVenue => myVenue.venue.name !== marker.title)
+      )
+      hiddenMarkers.forEach(marker => marker.setVisible(false))
+      this.setState({ hiddenMarkers })
+    } else {
+      this.setState({ venues: this.state.showVenues })
+      this.state.markers.forEach(marker => marker.setVisible(true))
+    }
   }
 
   render() {
 
     const logo = "Welcome to Brasília"
     return (
-      <div className="container">
-        <NavBar onSelectRestaurant={this.toggleResult} venues={this.state.venues} logo={logo} />
-        {/* <InfoWindow venues={this.state.venues} /> */}
-        <div id="map"></div>
+      <div className="container row">
+        <NavBar
+          onSelectRestaurant={this.toggleResult}
+          venues={this.state.venues}
+          markers={this.state.markers}
+          query={this.state.query}
+          filteredVenues={this.filteredVenues}
+          Query={q => this.Query(q)}
+          logo={logo}
+        />
+        <div className="listRestaurants col-4">
+          <ListRestaurants
+            venues={this.state.venues}
+            markers={this.state.markers}
+          />
+        </div>
+        <div className="col-8">
+          <div id="map"></div>
+        </div>
       </div>
     );
   }
@@ -133,3 +161,4 @@ function loadScript(url) {
 }
 
 export default App;
+
