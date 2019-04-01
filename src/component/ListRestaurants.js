@@ -1,13 +1,10 @@
 import React, { Component } from 'react'
 import ListGroup from 'react-bootstrap/ListGroup'
-import { slide as Menu } from 'react-burger-menu';
 
+/* This component show list of Restaurants. */
 class ListRestaurants extends Component {
 
-    /*
-    When restaurants are selected in ListRestaurants.
-    Will open into the map.
-    */
+    /* Open marker into the map. */
     openMarker = locationName => {
         this.props.markers.map(marker => {
             if (marker.title === locationName) {
@@ -21,7 +18,6 @@ class ListRestaurants extends Component {
 
     render() {
         return (
-            /*My list of Restaurants*/
             <ListGroup>
                 <ul className="list-group" >
                     {this.props.venues.map((myVenue) => (
@@ -39,7 +35,6 @@ class ListRestaurants extends Component {
             </ListGroup>
         );
     }
-
 }
 
 export default ListRestaurants
