@@ -1,12 +1,12 @@
 # Udacit
 ### Front End Web Developer
 
-Project created using React JS, Foursquare and Google Maps API. <br/>
+Project created using React, Foursquare, Google Maps API and Bootstrap. <br/>
 
 ## Dependencies
+
 *Google Maps API
 *Foursquare API
-
 
 ## How to Run
     
@@ -16,3 +16,4 @@ Project created using React JS, Foursquare and Google Maps API. <br/>
 * run npm install
 * run npm start
 * open browser to localhost:3000
+
