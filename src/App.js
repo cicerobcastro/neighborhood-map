@@ -9,6 +9,8 @@ class App extends Component {
 
   constructor(props) {
     super(props)
+
+    /*State of my app*/
     this.state = {
       venues: [],
       markers: [],
@@ -17,12 +19,14 @@ class App extends Component {
     }
   }
 
-  //is invoked immediately after a component is mounted
+  /* Is invoked immediately after a component is mounted. Call my method who get venues. */
   componentDidMount() {
     this.getVenues()
   }
 
   getVenues() {
+
+    /* Call API of Foursquare and get all venues. */
     const endPoint = "https://api.foursquare.com/v2/venues/explore?"
     const parameters = {
       client_id: "5OP1LMG5HXWVRFA12KBPCMKX54HI05JZBMINB2BCNJTLM1PV",
@@ -45,6 +49,7 @@ class App extends Component {
       })
   }
 
+  //Load map
   renderMap = () => {
     loadScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyBuAFQat2Xz08ijJHaXc9w15etZrBeVfhs&callback=initMap")
     window.initMap = this.initMap
@@ -52,7 +57,7 @@ class App extends Component {
 
   initMap = () => {
 
-    // Create a map
+    // Create the map
     var map = new window.google.maps.Map(document.getElementById('map'), {
       center: { lat: -15.8111593, lng: -47.9891185 },
       zoom: 12
@@ -61,16 +66,18 @@ class App extends Component {
     // Create a InfoWindow
     const infowindow = new window.google.maps.InfoWindow()
 
-    // Display Dynamic Markers
+    // Display dynamic markers
     this.state.venues.forEach(myVenue => {
 
+      //receiving information of my restaurants
       const contentString = `<b>${myVenue.venue.name}</b> <br><i>${myVenue.venue.location.address}</i>`
 
+      // if don't have address registred
       if (myVenue.venue.location.address === "undefined") {
         return "Address not found"
       }
 
-      // Create A Marker
+      // Create A Marker if informations of venues
       var image = 'https://maps.google.com/mapfiles/ms/icons/red-dot.png'
       var marker = new window.google.maps.Marker({
         position: { lat: myVenue.venue.location.lat, lng: myVenue.venue.location.lng },
@@ -86,7 +93,7 @@ class App extends Component {
         // Setting the content
         infowindow.setContent(contentString)
 
-        // Open an InfoWindow
+        // Open InfoWindow
         infowindow.open(map, marker)
       }
 
@@ -97,15 +104,15 @@ class App extends Component {
     })
   }
 
-  /*
-   used to search restaurants
-  */
+  /* Used to search restaurants */
   Query = query => {
-    this.setState({ query })
-    this.state.markers.map(marker => marker.setVisible(true))
+
     let filteredVenues
     let hiddenMarkers
+    this.setState({ query })
+    this.state.markers.map(marker => marker.setVisible(true))
 
+    /* Regex is used to match query with your respective venue. */
     if (query) {
       const match = new RegExp(escapeRegExp(query), "i")
       filteredVenues = this.state.venues.filter(myVenue =>
@@ -124,8 +131,7 @@ class App extends Component {
   }
 
   render() {
-
-    const logo = "Welcome to Brasília"
+    const logo = "Restaurants"
     return (
       <div className="container row">
         <NavBar
@@ -137,7 +143,7 @@ class App extends Component {
           Query={q => this.Query(q)}
           logo={logo}
         />
-        <div className="listRestaurants col-4">
+        <div className="col-4">
           <ListRestaurants
             venues={this.state.venues}
             markers={this.state.markers}
@@ -161,4 +167,3 @@ function loadScript(url) {
 }
 
 export default App;
-
