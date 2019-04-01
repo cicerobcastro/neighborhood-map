@@ -10,11 +10,11 @@
 }
   
 .search{
-  text-align: right;
+  float: right;
   display: flex;
 }
 
 #map {
-  text-align: right;
+  float: right;
   height: 100vh;
 }
