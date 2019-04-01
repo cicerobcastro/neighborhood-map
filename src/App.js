@@ -120,13 +120,16 @@ class App extends Component {
       )
       this.setState({ venues: filteredVenues })
       hiddenMarkers = this.state.markers.filter(marker =>
-        filteredVenues.every(myVenue => myVenue.venue.name !== marker.title)
+        filteredVenues.every(myVenue =>
+          myVenue.venue.name !== marker.title)
       )
-      hiddenMarkers.forEach(marker => marker.setVisible(false))
+      hiddenMarkers.forEach(marker =>
+        marker.setVisible(false))
       this.setState({ hiddenMarkers })
     } else {
       this.setState({ venues: this.state.showVenues })
-      this.state.markers.forEach(marker => marker.setVisible(true))
+      this.state.markers.forEach(marker =>
+        marker.setVisible(true))
     }
   }
 
@@ -143,13 +146,13 @@ class App extends Component {
           Query={q => this.Query(q)}
           logo={logo}
         />
-        <div className="col-4">
+        <div className="col-sm-4">
           <ListRestaurants
             venues={this.state.venues}
             markers={this.state.markers}
           />
         </div>
-        <div className="col-8">
+        <div className="col-sm-8">
           <div id="map"></div>
         </div>
       </div>
@@ -167,3 +170,4 @@ function loadScript(url) {
 }
 
 export default App;
+
