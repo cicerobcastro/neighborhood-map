@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 
+/* This component is the SearchBar with "Logo" */
 class NavBar extends Component {
 
     render() {
