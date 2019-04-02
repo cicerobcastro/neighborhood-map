@@ -1,20 +1,12 @@
-.App {
-  text-align: center;
-  height: 100vh;
-  width: 100vw;
-}
-
-.container{
-   display: block;
-   text-align: row;
-}
-  
 .search{
   text-align: right;
-  display: flex;
 }
 
 #map {
-  text-align: right;
-  height: 100vh;
+  height: 80vh;
+  }
+  html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
 }
