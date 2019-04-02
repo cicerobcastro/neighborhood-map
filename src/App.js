@@ -16,7 +16,7 @@ class App extends Component {
       showVenues: []
     }
   }
-  //is invoked immediately after a component is mounted
+  /*is invoked immediately after a component is mounted */
   componentDidMount() {
     this.getVenues()
   }
@@ -51,16 +51,16 @@ class App extends Component {
 
   initMap = () => {
 
-    // Create a map
+    /* Create a map */
     var map = new window.google.maps.Map(document.getElementById('map'), {
       center: { lat: -15.8111593, lng: -47.9891185 },
       zoom: 12
     })
 
-    // Create a InfoWindow
+    /* Create a InfoWindow */
     const infowindow = new window.google.maps.InfoWindow()
 
-    // Display Dynamic Markers
+    /* Display Dynamic Markers */
     this.state.venues.forEach(myVenue => {
 
       const contentString = `<b>${myVenue.venue.name}</b> <br><i>${myVenue.venue.location.address}</i>`
@@ -69,7 +69,7 @@ class App extends Component {
         return "Address not found"
       }
 
-      // Create A Marker
+      /* Create A Marker */
       var image = 'https://maps.google.com/mapfiles/ms/icons/red-dot.png'
       var marker = new window.google.maps.Marker({
         position: { lat: myVenue.venue.location.lat, lng: myVenue.venue.location.lng },
@@ -82,23 +82,21 @@ class App extends Component {
 
       function openMarker() {
 
-        // Setting the content
+        /* Setting the content */
         infowindow.setContent(contentString)
 
-        // Open an InfoWindow
+        /* Open an InfoWindow */
         infowindow.open(map, marker)
       }
 
-      // Click on A Marker!
+      /* Click on A Marker! */
       marker.addListener('click', function (event) {
         openMarker()
       })
     })
   }
 
-  /*
-   used to search restaurants
-  */
+  /* Used to search restaurants */
   attQuery = query => {
     this.setState({ query })
     this.state.markers.map(marker => marker.setVisible(true))
@@ -123,7 +121,7 @@ class App extends Component {
   }
 
   render() {
-
+    
     const logo = "Welcome to Brasília"
     return (
       <div className="container">
