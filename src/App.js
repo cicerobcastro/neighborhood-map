@@ -9,8 +9,6 @@ class App extends Component {
 
   constructor(props) {
     super(props)
-
-    /*State of my app*/
     this.state = {
       venues: [],
       markers: [],
@@ -18,15 +16,12 @@ class App extends Component {
       showVenues: []
     }
   }
-
-  /* Is invoked immediately after a component is mounted. Call my method who get venues. */
+  //is invoked immediately after a component is mounted
   componentDidMount() {
     this.getVenues()
   }
 
   getVenues() {
-
-    /* Call API of Foursquare and get all venues. */
     const endPoint = "https://api.foursquare.com/v2/venues/explore?"
     const parameters = {
       client_id: "5OP1LMG5HXWVRFA12KBPCMKX54HI05JZBMINB2BCNJTLM1PV",
@@ -49,7 +44,6 @@ class App extends Component {
       })
   }
 
-  //Load map
   renderMap = () => {
     loadScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyBuAFQat2Xz08ijJHaXc9w15etZrBeVfhs&callback=initMap")
     window.initMap = this.initMap
@@ -57,7 +51,7 @@ class App extends Component {
 
   initMap = () => {
 
-    // Create the map
+    // Create a map
     var map = new window.google.maps.Map(document.getElementById('map'), {
       center: { lat: -15.8111593, lng: -47.9891185 },
       zoom: 12
@@ -66,18 +60,16 @@ class App extends Component {
     // Create a InfoWindow
     const infowindow = new window.google.maps.InfoWindow()
 
-    // Display dynamic markers
+    // Display Dynamic Markers
     this.state.venues.forEach(myVenue => {
 
-      //receiving information of my restaurants
       const contentString = `<b>${myVenue.venue.name}</b> <br><i>${myVenue.venue.location.address}</i>`
 
-      // if don't have address registred
       if (myVenue.venue.location.address === "undefined") {
         return "Address not found"
       }
 
-      // Create A Marker if informations of venues
+      // Create A Marker
       var image = 'https://maps.google.com/mapfiles/ms/icons/red-dot.png'
       var marker = new window.google.maps.Marker({
         position: { lat: myVenue.venue.location.lat, lng: myVenue.venue.location.lng },
@@ -93,7 +85,7 @@ class App extends Component {
         // Setting the content
         infowindow.setContent(contentString)
 
-        // Open InfoWindow
+        // Open an InfoWindow
         infowindow.open(map, marker)
       }
 
@@ -104,15 +96,15 @@ class App extends Component {
     })
   }
 
-  /* Used to search restaurants */
-  Query = query => {
-
-    let filteredVenues
-    let hiddenMarkers
+  /*
+   used to search restaurants
+  */
+  attQuery = query => {
     this.setState({ query })
     this.state.markers.map(marker => marker.setVisible(true))
+    let filteredVenues
+    let hiddenMarkers
 
-    /* Regex is used to match query with your respective venue. */
     if (query) {
       const match = new RegExp(escapeRegExp(query), "i")
       filteredVenues = this.state.venues.filter(myVenue =>
@@ -120,40 +112,40 @@ class App extends Component {
       )
       this.setState({ venues: filteredVenues })
       hiddenMarkers = this.state.markers.filter(marker =>
-        filteredVenues.every(myVenue =>
-          myVenue.venue.name !== marker.title)
+        filteredVenues.every(myVenue => myVenue.venue.name !== marker.title)
       )
-      hiddenMarkers.forEach(marker =>
-        marker.setVisible(false))
+      hiddenMarkers.forEach(marker => marker.setVisible(false))
       this.setState({ hiddenMarkers })
     } else {
       this.setState({ venues: this.state.showVenues })
-      this.state.markers.forEach(marker =>
-        marker.setVisible(true))
+      this.state.markers.forEach(marker => marker.setVisible(true))
     }
   }
 
   render() {
-    const logo = "Restaurants"
+
+    const logo = "Welcome to Brasília"
     return (
-      <div className="container row">
+      <div className="container">
         <NavBar
           onSelectRestaurant={this.toggleResult}
           venues={this.state.venues}
           markers={this.state.markers}
           query={this.state.query}
           filteredVenues={this.filteredVenues}
-          Query={q => this.Query(q)}
+          attQuery={q => this.attQuery(q)}
           logo={logo}
         />
-        <div className="col-sm-4">
-          <ListRestaurants
-            venues={this.state.venues}
-            markers={this.state.markers}
-          />
-        </div>
-        <div className="col-sm-8">
-          <div id="map"></div>
+        <div className="row">
+          <div className="col-md-4">
+            <ListRestaurants
+              venues={this.state.venues}
+              markers={this.state.markers}
+            />
+          </div>
+          <div className="col-md-8">
+            <div id="map"></div>
+          </div>
         </div>
       </div>
     );
@@ -170,4 +162,3 @@ function loadScript(url) {
 }
 
 export default App;
-
