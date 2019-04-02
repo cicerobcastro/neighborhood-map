@@ -1,11 +1,14 @@
 import React, { Component } from 'react'
 import ListGroup from 'react-bootstrap/ListGroup'
 
-/* This component show list of Restaurants. */
 class ListRestaurants extends Component {
 
-    /* Open marker into the map. */
+    /*
+    When restaurants are selected in ListRestaurants.
+    Will open into the map.
+    */
     openMarker = locationName => {
+        // eslint-disable-next-line
         this.props.markers.map(marker => {
             if (marker.title === locationName) {
                 window.google.maps.event.trigger(marker, "click")
@@ -18,6 +21,7 @@ class ListRestaurants extends Component {
 
     render() {
         return (
+            /*My list of Restaurants*/
             <ListGroup>
                 <ul className="list-group" >
                     {this.props.venues.map((myVenue) => (
@@ -29,12 +33,13 @@ class ListRestaurants extends Component {
                             id={myVenue.venue.id}
                             aria-label={myVenue.venue.name}
                         >
-                            <a>{myVenue.venue.name}</a>
+                            <p>{myVenue.venue.name}</p>
                         </li>))}
                 </ul>
             </ListGroup>
         );
     }
+
 }
 
 export default ListRestaurants
