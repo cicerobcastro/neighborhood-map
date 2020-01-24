@@ -1,5 +1,5 @@
 # Neighborhood-Map
-# Udacit
+# Udacity
 ### Front End Web Developer
 
 This project is a map from Brasília showing some restaurants and your addresses, that information come from Foursquare API.
